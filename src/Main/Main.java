@@ -9,10 +9,10 @@ import java.util.Scanner;
 import grammar.GrammerAnalysis;
 import grammar.SimpleTravel2;
 import grammar.TravelGrammarTree;
-import semantic.SemanticAnalysis;
 import system.Node;
 
 public class Main {
+	/*
 	public static void main(String[] args) throws FileNotFoundException {
 		// 如果指定了输出文件路径
 		PrintStream newPs = null;
@@ -47,14 +47,11 @@ public class Main {
 			}
 
 			tgt.travel(root);
-			
-			SemanticAnalysis semanticAnalysis = new SemanticAnalysis();
-			semanticAnalysis.travel(root);
 
 			System.setOut(oldPs);
 
 			System.out.println("Done.");
 		}
 
-	}
+	}*/
 }

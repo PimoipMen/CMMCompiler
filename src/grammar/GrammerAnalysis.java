@@ -212,7 +212,9 @@ public class GrammerAnalysis {
 			node = oneBlockComment();
 			break;
 		default:
-			ThrowMyException.throwMyException(word, ErrorNum.EXPECTED_DIV_OR_MUL);
+			System.out.println(word.getType() + " " + word.getValue());
+			ThrowMyException.throwMyException(word,
+					ErrorNum.EXPECTED_DIV_OR_MUL);
 		}
 
 		return node;
@@ -375,19 +377,26 @@ public class GrammerAnalysis {
 
 		if (word.getType() == TokenType.LEFT_MEDIUM_BRACKET) {
 			word = nextWord();
-			Node indexNode = oneArithmetic(word);
-			word = nextWord();
-			if (word.getType() == TokenType.RIGHT_MEDIUM_BRACKET) {
-				Node iaNode = new Node(NODE_TYPE.IDENTI_ARR_ELEMENT);
-				Node childNode1 = new Node(NODE_TYPE.IDENTIFIER, identifier);
-				Node childNode2 = indexNode;
-				iaNode.addLink(childNode1);
-				iaNode.addLink(childNode2);
-				node.addLink(iaNode);
+			if (word.getType() == TokenType.INT_VALUE) {
+				String index = word.getValue();
 				word = nextWord();
+				if (word.getType() == TokenType.RIGHT_MEDIUM_BRACKET) {
+					Node iaNode = new Node(NODE_TYPE.IDENTI_ARR_ELEMENT);
+					Node childNode1 = new Node(NODE_TYPE.IDENTIFIER,
+							identifier);
+					Node childNode2 = new Node(NODE_TYPE.INT_VAL, index);
+					iaNode.addLink(childNode1);
+					iaNode.addLink(childNode2);
+					word = nextWord();
+				} else {
+					String errorMessage = ErrorNum.EXPECTED_RIGHT_MEDIUM_BRACKET
+							.toString() + " Line:" + word.getLineNum()
+							+ " Position:" + word.getStartLocation();
+					throw new MyException(errorMessage);
+				}
 			} else {
 				ThrowMyException.throwMyException(word,
-						ErrorNum.EXPECTED_RIGHT_MEDIUM_BRACKET);
+						ErrorNum.EXPECTED_INT_VAL);
 			}
 		} else {
 			node.addLink(new Node(NODE_TYPE.IDENTIFIER, preWord.getValue()));
@@ -639,8 +648,10 @@ public class GrammerAnalysis {
 		case PLUS:
 		case MINUS:
 		case LEFT_BRACKET:
-		case IDENTIFIER:
 			node.addLink(oneArithmetic(word));
+			break;
+		case IDENTIFIER:
+			isArrElement(node, word);
 			break;
 		default:
 			ThrowMyException.throwMyException(word, ErrorNum.ILLEGAL_LOGIC_EXP);
@@ -691,9 +702,10 @@ public class GrammerAnalysis {
 		out: do {
 			switch (word.getType()) {
 			case INT_VALUE:
+				node.addLink(new Node(NODE_TYPE.INT_VAL, word.getValue()));
+				break;
 			case REAL_VALUE:
-			case IDENTIFIER:
-				node.addLink(oneArithmetic(word));
+				node.addLink(new Node(NODE_TYPE.REAL_VAL, word.getValue()));
 				break;
 			case STRING_VALUE:
 				node.addLink(new Node(NODE_TYPE.STRING_VAL, word.getValue()));
@@ -798,17 +810,19 @@ public class GrammerAnalysis {
 				Word nw1 = nextWord();
 				if (nw1.getType() == TokenType.LEFT_MEDIUM_BRACKET) {
 					Word nw2 = nextWord();
-					Node indexNode = oneArithmetic(nw2);
-					Formaluetree.indexNodes.add(indexNode);
-					Word nw3 = nextWord();
-					if (nw3.getType() == TokenType.RIGHT_MEDIUM_BRACKET) {
-						int index = Formaluetree.indexNodes.size() - 1;
-						strs.add(value + nw1.getValue() + index
-								+ nw3.getValue());
-						words.add(nw3);
+					if (nw2.getType() == TokenType.INT_VALUE) {
+						Word nw3 = nextWord();
+						if (nw3.getType() == TokenType.RIGHT_MEDIUM_BRACKET) {
+							strs.add(value + nw1.getValue() + nw2.getValue()
+									+ nw3.getValue());
+							words.add(nw3);
+						} else {
+							ThrowMyException.throwMyException(word,
+									ErrorNum.EXPECTED_RIGHT_MEDIUM_BRACKET);
+						}
 					} else {
 						ThrowMyException.throwMyException(word,
-								ErrorNum.EXPECTED_RIGHT_MEDIUM_BRACKET);
+								ErrorNum.EXPECTED_INT_VAL);
 					}
 				} else {
 					strs.add(value);
