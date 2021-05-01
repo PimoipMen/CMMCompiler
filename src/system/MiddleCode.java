@@ -1,9 +1,5 @@
 package system;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,12 +73,4 @@ public class MiddleCode implements Serializable{
 		return ins.toString()+"\t"+value2+"\t"+value3+"\t"+value4;
 	}
 	
-	public static void outPutToFile(String fileName) throws IOException{
-		FileOutputStream fileOutputStream = new FileOutputStream("test_my.txt");
-		ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-		for(MiddleCode mc : middleCodes){
-			objectOutputStream.writeObject(mc);
-		}
-		objectOutputStream.flush();
-	}
 }

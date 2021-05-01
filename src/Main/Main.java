@@ -2,7 +2,6 @@ package Main;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -16,7 +15,7 @@ import system.Node;
 
 public class Main {
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws FileNotFoundException {
 		// 如果指定了输出文件路径
 		PrintStream newPs = null;
 		if (args.length > 0) {
@@ -57,13 +56,10 @@ public class Main {
 			System.setOut(oldPs);
 
 			System.out.println("Done.");
-			MiddleCode.outPutToFile("");
-			
-			
-			
+			for(MiddleCode middleCode: MiddleCode.middleCodes){
+				System.out.println(MiddleCode.middleCodes.indexOf(middleCode)+"\t"+middleCode.toString());
+			}
 		}
-		
-		
 
 	}
 

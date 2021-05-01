@@ -12,8 +12,8 @@ public class Test {
 	
 	
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
-		//output();
-		Execute exe = new Execute("test.txt");
+		output();
+		Execute exe = new Execute("test2.txt");
 		exe.execute();
 	}
 	
@@ -29,5 +29,6 @@ public class Test {
 		oos.writeObject(new MiddleCode(Instructions.JMP, "c", null, 8));
 		oos.writeObject(new MiddleCode(Instructions.WRI, "a", null, null));
 		oos.writeObject(new MiddleCode(Instructions.WRI, "b", null, null));
+		
 	}
 }
